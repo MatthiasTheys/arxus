@@ -10,69 +10,60 @@ on:
       - master
 
 jobs:
-  # Deploy Bicep file to create app service
   create_app_service:
     runs-on: ubuntu-latest
     steps:
-      - task: AzureCLI@2
-        displayName: Set up app service with Bicep file
-        inputs:
-          azureSubscription: '${{ secrets.AZURE_SUBSCRIPTION }}'  # Assuming secret for subscription ID
-          scriptType: 'bash'  # Script type is bash (default for CLI tasks)
-          scriptLocation: 'inlineScript'  # Script location is inline
+      - name: Set up app service with Bicep file
+        uses: Azure/cli@v2
+        with:
           inlineScript: |
             az deployment group create --resource-group mtResourceGroup --template-file ./servicedeploy.bicep
+        env:
+          AZURE_SUBSCRIPTION: ${{ secrets.AZURE_SUBSCRIPTION }}
 
-  
-  retrievegenerated:
+  retrieve_generated_hostname:
     needs: create_app_service
     runs-on: ubuntu-latest
     steps:
-      - task: AzureCLI@2
-        displayName: Retrieve generated hostname
-        inputs:
-          azureSubscription: '${{ secrets.AZURE_SUBSCRIPTION }}'
-          scriptType: 'powershell'  # Script type is PowerShell
-          scriptLocation: 'inlineScript'
+      - name: Retrieve generated hostname
+        uses: Azure/cli@v2
+        with:
           inlineScript: |
-            $hostname = az staticwebapp show --name ${{ secrets.AZURE_STATIC_WEB_APP_NAME }} --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --query defaultHostname -o tsv
-            Write-Host "##vso[task.setvariable variable=generated_hostname;isOutput=true]$hostname"
-    outputs:
-      generated_hostname: ${{ steps.builddeploy.outputs.generated_hostname }}
-          
+            hostname=$(az staticwebapp show --name ${{ secrets.AZURE_STATIC_WEB_APP_NAME }} --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --query defaultHostname -o tsv)
+            echo "##vso[task.setvariable variable=generated_hostname;isOutput=true]$hostname"
+        env:
+          AZURE_SUBSCRIPTION: ${{ secrets.AZURE_SUBSCRIPTION }}
+        id: retrievegenerated
 
   build_and_deploy_job:
-    needs: retrievegenerated
+    needs: retrieve_generated_hostname
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
-    name: Build and Deploy Job
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
         with:
           submodules: true
           lfs: false
+
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
         with:
-          azure_static_web_apps_api_token: ${{ secrets.AZURE_ACCESS_TOKEN }}_${{ steps.retrievegenerated.outputs.generated_hostname }}
-          repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_ACCESS_TOKEN }}_${{ needs.retrieve_generated_hostname.outputs.generated_hostname }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
-          ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
-          # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
-          app_location: "/" # App source code path
-          api_location: "" # Api source code path - optional
-          output_location: "" # Built app content directory - optional
-          ###### End of Repository/Build Configurations ######
+          app_location: "/"
+          api_location: ""
+          output_location: ""
 
   close_pull_request_job:
+    needs: retrieve_generated_hostname
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
     runs-on: ubuntu-latest
-    name: Close Pull Request Job
     steps:
       - name: Close Pull Request
-        id: closepullrequest
         uses: Azure/static-web-apps-deploy@v1
         with:
-          azure_static_web_apps_api_token: AZURE_STATIC_WEB_APPS_API_TOKEN_${generated_hostname}
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_ACCESS_TOKEN }}_${{ needs.retrieve_generated_hostname.outputs.generated_hostname }}
           action: "close"
