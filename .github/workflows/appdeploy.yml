@@ -17,7 +17,7 @@ jobs:
         uses: Azure/cli@v2
         with:
           inlineScript: |
-            az deployment group create --resource-group mtResourceGroup --template-file servicedeploy.bicep
+            az deployment group create --resource-group mtResourceGroup --template-file $GITHUB_WORKSPACE/servicedeploy.bicep
         env:
           AZURE_SUBSCRIPTION: ${{ secrets.AZURE_SUBSCRIPTION }}
 
