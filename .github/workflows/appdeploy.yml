@@ -9,7 +9,7 @@ on:
     branches:
       - master
   # Deploy Bicep file to create app service
-  create_app_service:
+  createappservice:
     needs: install-azure-cli
     runs-on: ubuntu-latest
     steps:
@@ -23,7 +23,7 @@ on:
           failOnStdErr: false
   
   retrievegenerated:
-    needs: create_app_service
+    needs: createappservice
     runs-on: ubuntu-latest
     outputs:
       generated_hostname: ${{ steps.builddeploy.outputs.generated_hostname }}
