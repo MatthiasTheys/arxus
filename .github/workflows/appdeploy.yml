@@ -13,10 +13,19 @@ jobs:
   create_app_service:
     runs-on: ubuntu-latest
     steps:
-      - name: List files in GitHub workspace
-        run: |
-          cd $GITHUB_WORKSPACE
-          ls -a
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+          lfs: false
+      - name: Run Azure CLI
+        uses: Azure/cli@v2
+        with:
+          inlineScript: |
+            az deployment group create --resource-group mtResourceGroup --template-file $GITHUB_WORKSPACE/.github/workflows/servicedeploy.bicep
+        env:
+          AZURE_SUBSCRIPTION: ${{ secrets.AZURE_SUBSCRIPTION }}
+
   retrieve_generated_hostname:
     needs: create_app_service
     runs-on: ubuntu-latest
