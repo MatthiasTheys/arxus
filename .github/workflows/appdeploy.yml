@@ -15,16 +15,8 @@ jobs:
     steps:
       - name: List files in GitHub workspace
         run: |
+          cd $GITHUB_WORKSPACE
           ls -a
-          cd ../
-          ls -a
-          cd ../
-          ls -a
-          cd ../
-          ls -a
-          cd ../
-          ls -a
-
   retrieve_generated_hostname:
     needs: create_app_service
     runs-on: ubuntu-latest
