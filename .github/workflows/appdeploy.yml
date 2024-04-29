@@ -18,6 +18,12 @@ jobs:
           ls -a
           cd ../
           ls -a
+          cd ../
+          ls -a
+          cd ../
+          ls -a
+          cd ../
+          ls -a
 
   retrieve_generated_hostname:
     needs: create_app_service
