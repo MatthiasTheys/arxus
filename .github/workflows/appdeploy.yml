@@ -16,6 +16,8 @@ jobs:
       - name: List files in GitHub workspace
         run: |
           ls -R $GITHUB_WORKSPACE
+          cd ../
+          ls -a
 
   retrieve_generated_hostname:
     needs: create_app_service
