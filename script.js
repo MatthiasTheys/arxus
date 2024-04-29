@@ -18,4 +18,3 @@ function showVideo(videoNumber) {
         videoToShow.classList.remove('d-none');
     }
 }
-
