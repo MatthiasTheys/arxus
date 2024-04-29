@@ -10,8 +10,17 @@ on:
       - master
 
 jobs:
+  install-azure-cli:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Azure CLI
+        uses: Azure/azure-cli@v1
+        with:
+          version: 'latest'
   # Deploy Bicep file to create app service
   create_app_service:
+    needs: install-azure-cli
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -26,6 +35,7 @@ jobs:
   retrievegenerated:
     needs: create_app_service
     runs-on: ubuntu-latest
+    uses: Azure/azure-cli@v1
     outputs:
       generated_hostname: ${{ steps.builddeploy.outputs.generated_hostname }}
     steps:
