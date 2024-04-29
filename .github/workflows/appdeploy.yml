@@ -12,13 +12,16 @@ on:
 jobs:
   # Deploy Bicep file to create app service
   create_app_service:
-    runs-on: ubuntu-latest
-    steps:
-      - task: AzureCLI@2
-        displayName: set up appservice with bicep file
-        script: |
+  runs-on: ubuntu-latest
+  steps:
+    - task: AzureCLI@2
+      displayName: Set up app service with Bicep file
+      inputs:
+        azureSubscription: '${{ secrets.AZURE_SUBSCRIPTION }}'  # Assuming secret for subscription ID
+        scriptType: 'bash'  # Script type is bash (default for CLI tasks)
+        scriptLocation: 'inlineScript'  # Script location is inline
+        inlineScript: |
           az deployment group create --resource-group mtResourceGroup --template-file ./servicedeploy.bicep
-
 
   
   retrievegenerated:
@@ -26,16 +29,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - task: AzureCLI@2
-        displayName: retrieve generated hostname
+        displayName: Retrieve generated hostname
         inputs:
           azureSubscription: '${{ secrets.AZURE_SUBSCRIPTION }}'
-          scriptType: 'pscore'
+          scriptType: 'powershell'  # Script type is PowerShell
           scriptLocation: 'inlineScript'
           inlineScript: |
             $hostname = az staticwebapp show --name ${{ secrets.AZURE_STATIC_WEB_APP_NAME }} --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --query defaultHostname -o tsv
-            echo "##vso[task.setvariable variable=generated_hostname;isOutput=true]$hostname"
-    outputs:
-      generated_hostname: ${{ steps.builddeploy.outputs.generated_hostname }}
+            Write-Host "##vso[task.setvariable variable=generated_hostname;isOutput=true]$hostname"
+      outputs:
+        generated_hostname: ${{ steps.builddeploy.outputs.generated_hostname }}
           
 
   build_and_deploy_job:
