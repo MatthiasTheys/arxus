@@ -33,7 +33,7 @@ on:
         id: gethostname
         run: echo "::set-output name=generated_hostname::$(az deployment group show -g ${{ secrets.AZURE_RESOURCE_GROUP }} -n myBicepDeployment --query properties.outputs.staticWebAppName.value -o tsv)"
 
-  build_and_deploy_job:
+  buildanddeployjob:
     needs: retrievegenerated
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
