@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Deploy Bicep file
-        uses: azure/azure-cli
+        uses: Azure/azure-cli@v1
         with:
           credentials: ${{ secrets.AZURE_ACCESS_TOKEN }}
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
@@ -30,11 +30,14 @@ jobs:
     outputs:
       generated_hostname: ${{ steps.builddeploy.outputs.generated_hostname }}
     steps:
-      - uses: azure/azure-cli
-      - name: Get the generated hostname
-        id: gethostname
-        run: echo "::set-output name=generated_hostname::$(az deployment group show -g ${{ secrets.AZURE_RESOURCE_GROUP }} -n myBicepDeployment --query properties.outputs.staticWebAppName.value -o tsv)"
-
+      - name: Retrieve generated hostname
+        uses: Azure/azure-cli@v1
+        with:
+          credentials: ${{ secrets.AZURE_ACCESS_TOKEN }}
+          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          script: |
+            az deployment group show -g ${{ secrets.AZURE_RESOURCE_GROUP }} -n myBicepDeployment --query properties.outputs.staticWebAppName.value -o tsv
+            
   build_and_deploy_job:
     needs: retrievegenerated
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
