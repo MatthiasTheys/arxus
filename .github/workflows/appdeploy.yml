@@ -13,13 +13,9 @@ jobs:
   create_app_service:
     runs-on: ubuntu-latest
     steps:
-      - name: Set up app service with Bicep file
-        uses: Azure/cli@v2
-        with:
-          inlineScript: |
-            az deployment group create --resource-group mtResourceGroup --template-file $GITHUB_WORKSPACE/servicedeploy.bicep
-        env:
-          AZURE_SUBSCRIPTION: ${{ secrets.AZURE_SUBSCRIPTION }}
+      - name: List files in GitHub workspace
+        run: |
+          ls -R $GITHUB_WORKSPACE
 
   retrieve_generated_hostname:
     needs: create_app_service
