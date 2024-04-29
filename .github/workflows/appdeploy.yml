@@ -15,7 +15,7 @@ jobs:
     steps:
       - name: List files in GitHub workspace
         run: |
-          ls -R $GITHUB_WORKSPACE
+          ls -a
           cd ../
           ls -a
 
