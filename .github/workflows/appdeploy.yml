@@ -35,10 +35,10 @@ jobs:
   retrievegenerated:
     needs: create_app_service
     runs-on: ubuntu-latest
-    uses: Azure/azure-cli@v1
     outputs:
       generated_hostname: ${{ steps.builddeploy.outputs.generated_hostname }}
     steps:
+      - uses: Azure/azure-cli@v1
       - name: Get the generated hostname
         id: gethostname
         run: echo "::set-output name=generated_hostname::$(az deployment group show -g ${{ secrets.AZURE_RESOURCE_GROUP }} -n myBicepDeployment --query properties.outputs.staticWebAppName.value -o tsv)"
