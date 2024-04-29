@@ -18,6 +18,12 @@ jobs:
         with:
           submodules: true
           lfs: false
+      - name: Azure Login
+        uses: Azure/login@v1
+        with:
+          creds: |
+            ${{ secrets.AZURE_USERNAME }}
+            ${{ secrets.AZURE_PASSWORD }}
       - name: Run Azure CLI
         uses: Azure/cli@v2
         with:
