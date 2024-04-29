@@ -37,8 +37,8 @@ jobs:
           inlineScript: |
             $hostname = az staticwebapp show --name ${{ secrets.AZURE_STATIC_WEB_APP_NAME }} --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --query defaultHostname -o tsv
             Write-Host "##vso[task.setvariable variable=generated_hostname;isOutput=true]$hostname"
-      outputs:
-        generated_hostname: ${{ steps.builddeploy.outputs.generated_hostname }}
+    outputs:
+      generated_hostname: ${{ steps.builddeploy.outputs.generated_hostname }}
           
 
   build_and_deploy_job:
