@@ -12,16 +12,16 @@ on:
 jobs:
   # Deploy Bicep file to create app service
   create_app_service:
-  runs-on: ubuntu-latest
-  steps:
-    - task: AzureCLI@2
-      displayName: Set up app service with Bicep file
-      inputs:
-        azureSubscription: '${{ secrets.AZURE_SUBSCRIPTION }}'  # Assuming secret for subscription ID
-        scriptType: 'bash'  # Script type is bash (default for CLI tasks)
-        scriptLocation: 'inlineScript'  # Script location is inline
-        inlineScript: |
-          az deployment group create --resource-group mtResourceGroup --template-file ./servicedeploy.bicep
+    runs-on: ubuntu-latest
+    steps:
+      - task: AzureCLI@2
+        displayName: Set up app service with Bicep file
+        inputs:
+          azureSubscription: '${{ secrets.AZURE_SUBSCRIPTION }}'  # Assuming secret for subscription ID
+          scriptType: 'bash'  # Script type is bash (default for CLI tasks)
+          scriptLocation: 'inlineScript'  # Script location is inline
+          inlineScript: |
+            az deployment group create --resource-group mtResourceGroup --template-file ./servicedeploy.bicep
 
   
   retrievegenerated:
