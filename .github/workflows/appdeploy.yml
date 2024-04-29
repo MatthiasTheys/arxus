@@ -13,9 +13,10 @@ jobs:
   create_app_service:
     runs-on: ubuntu-latest
     steps:
-      - name: List files in GitHub workspace
+      - name: Debug GitHub workspace contents
         run: |
-          ls -R $GITHUB_WORKSPACE
+          pwd  # Print current working directory
+          ls -R  # List all files recursively
 
   retrieve_generated_hostname:
     needs: create_app_service
