@@ -8,8 +8,10 @@ on:
     types: [opened, synchronize, reopened, closed]
     branches:
       - master
+
+jobs:
   # Deploy Bicep file to create app service
-  createappservice:
+  create_app_service:
     needs: install-azure-cli
     runs-on: ubuntu-latest
     steps:
@@ -23,7 +25,7 @@ on:
           failOnStdErr: false
   
   retrievegenerated:
-    needs: createappservice
+    needs: create_app_service
     runs-on: ubuntu-latest
     outputs:
       generated_hostname: ${{ steps.builddeploy.outputs.generated_hostname }}
@@ -33,7 +35,7 @@ on:
         id: gethostname
         run: echo "::set-output name=generated_hostname::$(az deployment group show -g ${{ secrets.AZURE_RESOURCE_GROUP }} -n myBicepDeployment --query properties.outputs.staticWebAppName.value -o tsv)"
 
-  buildanddeployjob:
+  build_and_deploy_job:
     needs: retrievegenerated
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
@@ -57,7 +59,7 @@ on:
           output_location: "" # Built app content directory - optional
           ###### End of Repository/Build Configurations ######
 
-  closepullrequestjob:
+  close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
     runs-on: ubuntu-latest
     name: Close Pull Request Job
