@@ -8,16 +8,6 @@ on:
     types: [opened, synchronize, reopened, closed]
     branches:
       - master
-
-jobs:
-  install-azure-cli:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Install Azure CLI
-        uses: Azure/azure-cli@v1
-        with:
-          version: 'latest'
   # Deploy Bicep file to create app service
   create_app_service:
     needs: install-azure-cli
@@ -38,7 +28,7 @@ jobs:
     outputs:
       generated_hostname: ${{ steps.builddeploy.outputs.generated_hostname }}
     steps:
-      - uses: Azure/azure-cli@v1
+      - uses: azure/azure-cli@v1
       - name: Get the generated hostname
         id: gethostname
         run: echo "::set-output name=generated_hostname::$(az deployment group show -g ${{ secrets.AZURE_RESOURCE_GROUP }} -n myBicepDeployment --query properties.outputs.staticWebAppName.value -o tsv)"
