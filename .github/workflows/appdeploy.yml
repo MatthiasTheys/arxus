@@ -24,7 +24,7 @@ jobs:
           failOnStdErr: false
   
   retrievegenerated:
-    depends-on: create_app_service
+    needs: create_app_service
     runs-on: ubuntu-latest
     outputs:
       generated_hostname: ${{ steps.builddeploy.outputs.generated_hostname }}
@@ -34,7 +34,7 @@ jobs:
         run: echo "::set-output name=generated_hostname::$(az deployment group show -g ${{ secrets.AZURE_RESOURCE_GROUP }} -n myBicepDeployment --query properties.outputs.staticWebAppName.value -o tsv)"
 
   build_and_deploy_job:
-    depends-on: retrievegenerated
+    needs: retrievegenerated
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
     name: Build and Deploy Job
