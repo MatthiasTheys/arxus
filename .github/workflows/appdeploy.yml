@@ -62,6 +62,12 @@ jobs:
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+          lfs: false
+
       - name: Authenticate and push changes to Azure Static Web Apps
         uses: Azure/cli@v2
         with:
@@ -71,13 +77,13 @@ jobs:
           AZURE_SUBSCRIPTION: ${{ secrets.AZURE_SUBSCRIPTION }}
 
       - name: change permissions
-        run: ls -l $GITHUB_WORKSPACE
+        run:
         chmod +rwx $GITHUB_WORKSPACE/dist
 
       - name: deploy to webapp
-        uses: Azure/cli@v2
+        uses: Azure/static-web-apps-deploy@v0.0.1
         with:
-          inlineScript: |
-            az webapp deploy --name axusapp --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --src-path $GITHUB_WORKSPACE/dist/index.html
-        env:
-          AZURE_SUBSCRIPTION: ${{ secrets.AZURE_SUBSCRIPTION }}
+          azure_static_web_apps_api_token: ab9c4e2019c919ebf1803d7438e6200c337eae915140d2efe301efee68ac62c65-681d4baa-efba-4556-b733-e80532121f7100f214426
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          action: "upload"
+          app_location: "dist"
