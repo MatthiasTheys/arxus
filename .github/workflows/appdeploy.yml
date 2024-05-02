@@ -71,7 +71,8 @@ jobs:
           AZURE_SUBSCRIPTION: ${{ secrets.AZURE_SUBSCRIPTION }}
 
       - name: change permissions
-        run: chmod +rwx $GITHUB_WORKSPACE/dist
+        run: ls -l $GITHUB_WORKSPACE
+        chmod +rwx $GITHUB_WORKSPACE/dist
 
       - name: deploy to webapp
         uses: Azure/cli@v2
