@@ -72,15 +72,14 @@ jobs:
         uses: Azure/cli@v2
         with:
           inlineScript: |
-            cd $GITHUB_WORKSPACE
-            ls -a
             az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} --tenant ${{ secrets.AZURE_TENANT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }}
         env:
           AZURE_SUBSCRIPTION: ${{ secrets.AZURE_SUBSCRIPTION }}
 
-      - name: Deploy to Azure Static Web Apps
-        run: |
-          az webapp deploy --name axusapp --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --src-path $GITHUB_WORKSPACE
+      - name: deploy to webapp
+        uses: Azure/cli@v2
+        with:
+          inlineScript: |
+            az webapp deploy --name axusapp --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --src-path $GITHUB_WORKSPACE/dist
         env:
           AZURE_SUBSCRIPTION: ${{ secrets.AZURE_SUBSCRIPTION }}
-
