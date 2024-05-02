@@ -76,12 +76,8 @@ jobs:
         env:
           AZURE_SUBSCRIPTION: ${{ secrets.AZURE_SUBSCRIPTION }}
 
-      - name: change permissions
-        run:
-        chmod +rwx $GITHUB_WORKSPACE/dist
-
       - name: deploy to webapp
-        uses: Azure/static-web-apps-deploy@v0.0.1
+        uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ab9c4e2019c919ebf1803d7438e6200c337eae915140d2efe301efee68ac62c65-681d4baa-efba-4556-b733-e80532121f7100f214426
           repo_token: ${{ secrets.GITHUB_TOKEN }}
