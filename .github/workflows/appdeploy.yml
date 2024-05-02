@@ -80,6 +80,7 @@ jobs:
         uses: Azure/cli@v2
         with:
           inlineScript: |
+            chmod +x $GITHUB_WORKSPACE/dist
             az webapp deploy --name axusapp --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --src-path $GITHUB_WORKSPACE/dist
         env:
           AZURE_SUBSCRIPTION: ${{ secrets.AZURE_SUBSCRIPTION }}
