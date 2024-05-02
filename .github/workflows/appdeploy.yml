@@ -81,7 +81,7 @@ jobs:
         with:
           inlineScript: |
             api_token=$(az staticwebapp secrets list --name axusapp --query "properties.apiKey" -o tsv)
-            echo "##vso[task.setvariable variable=api_token;isOutput=true]$api_token"
+            echo "::set-output name=api_token::$api_token"
         env:
           AZURE_SUBSCRIPTION: ${{ secrets.AZURE_SUBSCRIPTION }}
         id: retrieveapitoken
