@@ -31,7 +31,7 @@ jobs:
         uses: Azure/cli@v2
         with:
           inlineScript: |
-            az deployment group create --resource-group mtResourceGroup --template-file $GITHUB_WORKSPACE/.github/workflows/servicedeploy.bicep
+            az deployment group create --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --template-file $GITHUB_WORKSPACE/.github/workflows/servicedeploy.bicep
         env:
           AZURE_SUBSCRIPTION: ${{ secrets.AZURE_SUBSCRIPTION }}
 
@@ -68,19 +68,19 @@ jobs:
           submodules: true
           lfs: false
 
-      - name: retrieve api token
-        id: get_api_token
-        run: |
-          api_token=$(az rest --method post --url "/subscriptions/${{ secrets.AZURE_SUBSCRIPTION }}/resourceGroups/${{ secrets.AZURE_RESOURCE_GROUP }}/providers/Microsoft.Web/staticSites/axusapp/listFunctionKeys?api-version=2021-10-01" --query functionKeys.apiToken --output tsv)
-          echo "##vso[task.setvariable variable=api_token]$api_token"
-        env:
-          AZURE_SUBSCRIPTION: ${{ secrets.AZURE_SUBSCRIPTION }}
-
       - name: Authenticate
         uses: Azure/cli@v2
         with:
           inlineScript: |
             az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} --tenant ${{ secrets.AZURE_TENANT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }}
+        env:
+          AZURE_SUBSCRIPTION: ${{ secrets.AZURE_SUBSCRIPTION }}
+
+      - name: retrieve api token
+        id: get_api_token
+        run: |
+          api_token=$(az rest --method post --url "/subscriptions/${{ secrets.AZURE_SUBSCRIPTION }}/resourceGroups/${{ secrets.AZURE_RESOURCE_GROUP }}/providers/Microsoft.Web/staticSites/axusapp/listFunctionKeys?api-version=2021-10-01" --query functionKeys.apiToken --output tsv)
+          echo "##vso[task.setvariable variable=api_token]$api_token"
         env:
           AZURE_SUBSCRIPTION: ${{ secrets.AZURE_SUBSCRIPTION }}
 
