@@ -81,14 +81,14 @@ jobs:
         with:
           inlineScript: |
             api_token=$(az staticwebapp secrets list --name axusapp --query "properties.apiKey")
-            echo "::set-output name=api_token::$api_token"
+            set-output name=api_token::$api_token
         env:
           AZURE_SUBSCRIPTION: ${{ secrets.AZURE_SUBSCRIPTION }}
 
       - name: deploy to webapp
         uses: Azure/static-web-apps-deploy@v1
         with:
-          azure_static_web_apps_api_token: ${{ steps.retrieveapitoken.outputs.api_token }}
+          azure_static_web_apps_api_token: ${{ steps.retrieveapitoken.outputs.$api_token }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
           app_location: "dist"
