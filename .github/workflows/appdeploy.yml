@@ -39,6 +39,14 @@ jobs:
     needs: create_app_service
     runs-on: ubuntu-latest
     steps:
+      - name: Authenticate with Azure using Certificate
+        uses: Azure/cli@v2
+        with:
+          inlineScript: |
+            az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} --tenant ${{ secrets.AZURE_TENANT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }}
+        env:
+          AZURE_SUBSCRIPTION: ${{ secrets.AZURE_SUBSCRIPTION }}
+          
       - name: Retrieve generated hostname
         uses: Azure/cli@v2
         with:
