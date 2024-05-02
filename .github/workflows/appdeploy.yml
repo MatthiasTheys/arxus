@@ -73,9 +73,9 @@ jobs:
         with:
           inlineScript: |
             az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} --tenant ${{ secrets.AZURE_TENANT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }}
-            az staticwebapp deployment source \
+            az staticwebapp deploy source \
               --resource-group ${{secrets.AZURE_RESOURCE_GROUP}} \
-              -name axusapp \
+              --name axusapp \
               --source ./dist \
               --index ./dist/index.html
         env:
