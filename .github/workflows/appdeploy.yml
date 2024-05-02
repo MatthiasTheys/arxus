@@ -84,11 +84,15 @@ jobs:
             echo "##vso[task.setvariable variable=api_token;isOutput=true]$api_token"
         env:
           AZURE_SUBSCRIPTION: ${{ secrets.AZURE_SUBSCRIPTION }}
+        id: retrieveapitoken
+
+      - name: Debug
+        run: echo ${{ steps.retrieveapitoken.outputs.api_token }}
 
       - name: deploy to webapp
         uses: Azure/static-web-apps-deploy@v1
         with:
-          azure_static_web_apps_api_token: bfc5128991c6fee4ffdbc0213a04190cd1786a159e4993833c510fab022592fa5-c74796f5-8463-4d3a-9c6c-634a632106ce00f214645
+          azure_static_web_apps_api_token: ${{ steps.retrieveapitoken.outputs.api_token }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
           app_location: "dist"
