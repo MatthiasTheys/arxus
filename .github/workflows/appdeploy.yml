@@ -18,11 +18,17 @@ jobs:
         with:
           submodules: true
           lfs: false
+            - name: Authenticate with Azure using Certificate
+        uses: Azure/cli@v2
+        with:
+          inlineScript: |
+            az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} --tenant ${{ secrets.AZURE_TENANT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }}
+        env:
+          AZURE_SUBSCRIPTION: ${{ secrets.AZURE_SUBSCRIPTION }}
       - name: Run Azure CLI
         uses: Azure/cli@v2
         with:
           inlineScript: |
-            az login -username ${{ secrets.AZURE_USERNAME }} -password ${{ secrets.AZURE_PASSWORD }}
             az deployment group create --resource-group mtResourceGroup --template-file $GITHUB_WORKSPACE/.github/workflows/servicedeploy.bicep
         env:
           AZURE_SUBSCRIPTION: ${{ secrets.AZURE_SUBSCRIPTION }}
