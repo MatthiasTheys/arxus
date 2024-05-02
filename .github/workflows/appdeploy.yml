@@ -88,7 +88,7 @@ jobs:
       - name: deploy to webapp
         uses: Azure/static-web-apps-deploy@v1
         with:
-          azure_static_web_apps_api_token: ${{ env.api_token }}
+          azure_static_web_apps_api_token: bfc5128991c6fee4ffdbc0213a04190cd1786a159e4993833c510fab022592fa5-c74796f5-8463-4d3a-9c6c-634a632106ce00f214645
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
           app_location: "dist"
