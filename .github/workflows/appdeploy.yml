@@ -18,13 +18,15 @@ jobs:
         with:
           submodules: true
           lfs: false
-            - name: Authenticate with Azure using Certificate
+
+      - name: Authenticate with Azure using Certificate
         uses: Azure/cli@v2
         with:
           inlineScript: |
             az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} --tenant ${{ secrets.AZURE_TENANT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }}
         env:
           AZURE_SUBSCRIPTION: ${{ secrets.AZURE_SUBSCRIPTION }}
+
       - name: Run Azure CLI
         uses: Azure/cli@v2
         with:
