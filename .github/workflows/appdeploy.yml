@@ -83,6 +83,6 @@ jobs:
         uses: Azure/cli@v2
         with:
           inlineScript: |
-            az webapp deploy --name axusapp --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --src-path /dist --type staticsites
+            az webapp deploy --name axusapp --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --src-path /dist
         env:
           AZURE_SUBSCRIPTION: ${{ secrets.AZURE_SUBSCRIPTION }}
