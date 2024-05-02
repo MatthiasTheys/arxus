@@ -78,7 +78,7 @@ jobs:
 
       - name: Deploy to Azure Static Web Apps
         run: |
-          az webapp deployment source config-zip --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --name axusapp --src ./dist
+          az webapp deploy --name axusapp --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --src-path $GITHUB_WORKSPACE/dist  --output-location ""
         env:
           AZURE_SUBSCRIPTION: ${{ secrets.AZURE_SUBSCRIPTION }}
 
