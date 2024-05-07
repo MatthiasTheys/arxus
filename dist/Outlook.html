@@ -7,23 +7,20 @@
     <script src="./script.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous"></head>
 <body class="background container">
+    <a class="btn btn-outline-light position-fixed top-0 start-0 m-3" id="homeButton" href="index.html">Home</a>
     <div class="row">
         <div class="shadow-lg card mt-5 border-5 border-danger bg-light rounded">
             <img class="card-img-top border-bottom border-3" src="./images/ARXUS_rebrand_logo_RGB-colored dark.svg" alt="Card image cap">
             <div class="card-body text-center">
-              <div class="mt-3 row">
-                <h5 class="offset-2 col-4">Outlook</h5>
-                <h5 class="col-4">Teams</h5>
-              </div>
                 <div class="mt-3">
-                      <a href="Outlook.html" class="col-3 btn btn-outline-danger">
-                        <img class="imagebutton" src="/dist/images/Red - Microsoft outlook.png" alt="Outlook">
-                      </a>
-                      <a href="Teams.html" class="offset-1 col-3 btn btn-outline-danger">
-                        <img class="imagebutton2" src="/dist/images/Red - Microsoft teams.png" alt="Teams">
-                      </a>
-                  </div>
+                    <video class="d-none h-50 w-50 border-3 shadow-lg" id="video1" controls>
+                        <source src="https://mtblobstorager0895598.blob.core.windows.net/mtblob/Recording 2024-04-26 105821.mp4?sp=r&st=2024-04-26T11:04:01Z&se=2024-06-08T19:04:01Z&spr=https&sv=2022-11-02&sr=c&sig=ZBA4sA8D435CQPRX4cQlr5RgNB788QUHhNPaRsz7Ld4%3D" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
                 </div>
+                <h5 class="card-title">What do you want to know?</h5>
+                <p class="card-text">Choose your guide</p>
+                <a href="#" class="btn btn-outline-danger" onclick="showVideo(1)">How do I send an email in Outlook?</a>
             </div>
         </div>
     </div>
