@@ -35,27 +35,6 @@ jobs:
         env:
           AZURE_SUBSCRIPTION: ${{ secrets.AZURE_SUBSCRIPTION }}
 
-  retrieve_generated_hostname:
-    needs: create_app_service
-    runs-on: ubuntu-latest
-    steps:
-      - name: Authenticate with Azure using Certificate
-        uses: Azure/cli@v2
-        with:
-          inlineScript: |
-            az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} --tenant ${{ secrets.AZURE_TENANT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }}
-        env:
-          AZURE_SUBSCRIPTION: ${{ secrets.AZURE_SUBSCRIPTION }}
-
-      - name: Retrieve generated hostname
-        uses: Azure/cli@v2
-        with:
-          inlineScript: |
-            hostname=$(az staticwebapp show --name arxusapp --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --query defaultHostname -o tsv)
-            echo "##vso[task.setvariable variable=generated_hostname;isOutput=true]$hostname"
-        env:
-          AZURE_SUBSCRIPTION: ${{ secrets.AZURE_SUBSCRIPTION }}
-        id: retrievegenerated
 
   build_and_deploy_job:
     needs: retrieve_generated_hostname
